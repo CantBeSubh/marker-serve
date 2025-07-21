@@ -3,7 +3,7 @@ import logging
 from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from typing_extensions import Annotated
 
-from src.core.logging import Chalk
+from src.core.logging.chalk import Chalk
 
 from .schemas import ConvertResponse
 from .services import parse_pdf

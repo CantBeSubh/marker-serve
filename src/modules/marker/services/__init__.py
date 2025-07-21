@@ -8,7 +8,7 @@ from marker.logger import configure_logging
 from marker.output import text_from_rendered
 from typing_extensions import Annotated
 
-from src.core.logging import Chalk
+from src.core.logging.chalk import Chalk
 
 configure_logging()
 logger = logging.getLogger(__name__)

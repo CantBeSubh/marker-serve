@@ -8,7 +8,7 @@ from marker.models import create_model_dict
 
 from src.api.v1.core import v1_router
 from src.core.config.env import env
-from src.core.logging import Chalk
+from src.core.logging.chalk import Chalk
 
 configure_logging()
 logger = logging.getLogger(__name__)
