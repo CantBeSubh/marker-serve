@@ -1,6 +1,50 @@
-def main():
-    print("Hello from marker-serve!")
+import logging
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from marker.logger import configure_logging
+from marker.models import load_all_models
+
+from src.core.config.env import env
+from src.core.logging import Chalk
+
+configure_logging()
+logger = logging.getLogger(__name__)
+
+model_list = None
+chalk = Chalk()
 
 
-if __name__ == "__main__":
-    main()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global model_list
+    try:
+        logger.info(chalk.blue("Loading models..."))
+        model_list = load_all_models()
+        logger.info()
+        yield
+    except Exception as e:
+        logger.error(chalk.red(f"Error loading models: {str(e)}"))
+        raise
+
+
+app = FastAPI(lifespan=lifespan, title="Marker Server")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[env.allowed_origins],
+    allow_methods=["*"],
+    allow_headers=["*"],
+    allow_credentials=True,
+)
+
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+
+
+@app.get("/health")
+async def health():
+    return {"message": "OK"}
