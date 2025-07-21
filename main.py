@@ -21,12 +21,12 @@ chalk = Chalk()
 async def lifespan(app: FastAPI) -> None:
     global models
     try:
-        logger.info(chalk.blue("Loading models..."))
+        chalk.info("Loading models...")
         models = create_model_dict()
         yield
-        logger.info(chalk.yellow("Server shutting down..."))
+        chalk.warn("Server shutting down...")
     except Exception as e:
-        logger.error(chalk.red(f"Error loading models: {str(e)}"))
+        chalk.error(f"Error loading models: {str(e)}")
         raise
 
 

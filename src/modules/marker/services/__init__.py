@@ -1,6 +1,4 @@
-import base64
 import logging
-import os
 import tempfile
 import time
 
@@ -44,22 +42,20 @@ async def parse_pdf(
         entry_time = time.time()
         filename = file.filename
         file_bytes = await file.read()
-        print(chalk.blue(f"Entry time for {filename}: {entry_time}"))
-        print(chalk.blue("Parsing PDF file"))
+        chalk.info(f"Entry time for {filename}: {entry_time}")
+        chalk.info("Parsing PDF file")
         with tempfile.NamedTemporaryFile(suffix=".pdf") as temp_pdf:
             temp_pdf.write(file_bytes)
             temp_path = temp_pdf.name
-            print(chalk.blue(f"Temp path: {temp_path}"))
+            chalk.info(f"Temp path: {temp_path}")
             converter = PdfConverter(artifact_dict=models)
             rendered = converter(temp_path)
             markdown_text, _, images = text_from_rendered(rendered)
             metadata = rendered.metadata
             completion_time = time.time()
 
-            print(
-                chalk.green(
-                    f"Model processes complete time for {filename}: {completion_time}"
-                )
+            chalk.success(
+                f"Model processes complete time for {filename}: {completion_time}"
             )
             return {
                 "markdown": markdown_text,
@@ -68,7 +64,7 @@ async def parse_pdf(
                 "status": "ok",
             }
     except Exception as e:
-        print(chalk.red(f"Error processing PDF {file.filename}: {str(e)}"))
+        chalk.error(f"Error processing PDF {file.filename}: {str(e)}")
         return {
             "markdown": "",
             "metadata": {},

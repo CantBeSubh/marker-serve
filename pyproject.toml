@@ -5,9 +5,9 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "colorama>=0.4.6",
     "fastapi>=0.116.1",
     "marker-pdf>=1.8.2",
+    "rich>=14.0.0",
 ]
 
 [tool.ruff]

@@ -30,10 +30,10 @@ async def convert(
     models: Annotated[any, "List of models to use for parsing"] = Depends(get_models),
 ) -> ConvertResponse:
     try:
-        logger.info(chalk.blue(f"Converting PDF: {pdf_file.filename}"))
+        chalk.info(f"Converting PDF: {pdf_file.filename}")
         result = await parse_pdf(pdf_file, models)
-        logger.info(chalk.green(f"PDF converted: {pdf_file.filename}"))
+        chalk.success(f"PDF converted: {pdf_file.filename}")
         return ConvertResponse(**result)
     except Exception as e:
-        logger.error(chalk.red(f"Error converting PDF {pdf_file.filename}: {str(e)}"))
+        chalk.error(f"Error converting PDF {pdf_file.filename}: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
