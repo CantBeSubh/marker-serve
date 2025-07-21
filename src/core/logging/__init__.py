@@ -1,3 +1,6 @@
+# TODO: I don't think this is the best way to do this
+
+
 class Chalk:
     def __init__(self):
         from colorama import Fore, Style, init
