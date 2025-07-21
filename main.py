@@ -18,13 +18,14 @@ chalk = Chalk()
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> None:
     global model_list
     try:
         logger.info(chalk.blue("Loading models..."))
         model_list = load_all_models()
         logger.info()
         yield
+        logger.info(chalk.yellow("Server shutting down..."))
     except Exception as e:
         logger.error(chalk.red(f"Error loading models: {str(e)}"))
         raise
@@ -42,12 +43,12 @@ app.add_middleware(
 
 
 @app.get("/")
-async def root():
+async def root() -> dict:
     return {"message": "Hello World"}
 
 
 @app.get("/health")
-async def health():
+async def health() -> dict:
     return {"message": "OK"}
 
 

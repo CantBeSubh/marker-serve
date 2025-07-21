@@ -6,7 +6,7 @@ from src.core.config.env import env
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
-async def verify_token(token: str = Depends(oauth2_scheme)):
+async def verify_token(token: str = Depends(oauth2_scheme)) -> str:
     """
     Dumb simple authentication middleware.
     Raises HTTPException(401) if token is invalid.

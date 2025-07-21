@@ -1,6 +1,7 @@
 import logging
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile
+from typing_extensions import Annotated
 
 from src.core.logging import Chalk
 
@@ -15,7 +16,7 @@ chalk = Chalk()
 router = APIRouter(tags=["Chat"])
 
 
-def get_model_list():
+def get_model_list() -> any:
     from main import model_list
 
     if model_list is None:
@@ -24,7 +25,12 @@ def get_model_list():
 
 
 @router.post("/convert", response_model=ConvertResponse)
-async def convert(pdf_file: UploadFile, models=Depends(get_model_list)):
+async def convert(
+    pdf_file: UploadFile,
+    models: Annotated[any, "List of models to use for parsing"] = Depends(
+        get_model_list
+    ),
+) -> ConvertResponse:
     try:
         logger.info(chalk.blue(f"Converting PDF: {pdf_file.filename}"))
         result = await parse_pdf(pdf_file, models)

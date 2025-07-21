@@ -9,3 +9,23 @@ dependencies = [
     "fastapi>=0.116.1",
     "marker>=2.1.5",
 ]
+
+[tool.ruff]
+select = ["E", "F", "I", "B", "C4", "ARG", "SIM", "PTH", "RUF", "ANN"]
+indent-width = 4
+target-version = "py310"
+line-length = 88
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"
+
+[tool.ruff.lint]
+isort.combine-as-imports = true
+isort.force-wrap-aliases = true
+fixable = ["ALL"]
+unfixable = []
+ignore = ["E203", "E501"]
+select = ["E", "F", "W", "Q", "I", "ANN"]

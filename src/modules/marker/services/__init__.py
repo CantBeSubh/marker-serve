@@ -6,6 +6,7 @@ import time
 from fastapi import UploadFile
 from marker.convert import convert_single_pdf
 from marker.logger import configure_logging
+from typing_extensions import Annotated
 
 from src.core.logging import Chalk
 
@@ -14,7 +15,11 @@ logger = logging.getLogger(__name__)
 chalk = Chalk()
 
 
-async def parse_pdf(file: UploadFile, model_list, extract_images=True) -> dict:
+async def parse_pdf(
+    file: UploadFile,
+    model_list: Annotated[any, "A list of models to use for parsing"],
+    extract_images: Annotated[bool, "Whether to extract images from the PDF"] = True,
+) -> dict:
     """
     Parse a PDF file using the provided model list.
     Returns a dictionary with the following keys:
