@@ -1,11 +1,13 @@
 import base64
 import logging
 import os
+import tempfile
 import time
 
 from fastapi import UploadFile
-from marker.convert import convert_single_pdf
+from marker.converters.pdf import PdfConverter
 from marker.logger import configure_logging
+from marker.output import text_from_rendered
 from typing_extensions import Annotated
 
 from src.core.logging import Chalk
@@ -17,7 +19,7 @@ chalk = Chalk()
 
 async def parse_pdf(
     file: UploadFile,
-    model_list: Annotated[any, "A list of models to use for parsing"],
+    models: Annotated[any, "A list of models to use for parsing"],
     extract_images: Annotated[bool, "Whether to extract images from the PDF"] = True,
 ) -> dict:
     """
@@ -26,7 +28,7 @@ async def parse_pdf(
 
     Arguments:
     - file: The PDF file to parse
-    - model_list: A list of models to use for parsing
+    - models: A list of models to use for parsing
     - extract_images: Whether to extract images from the PDF
 
     Returns:
@@ -42,47 +44,35 @@ async def parse_pdf(
         entry_time = time.time()
         filename = file.filename
         file_bytes = await file.read()
-        logger.info(chalk.blue(f"Entry time for {filename}: {entry_time}"))
-        logger.debug(chalk.blue("Parsing PDF file"))
-        markdown_text, images, metadata = await convert_single_pdf(
-            file_bytes, model_list
-        )
-        logger.debug(chalk.blue(f"Images extracted: {list(images.keys())}"))
-        image_data = {}
-        if extract_images:
-            for i, (filename, image) in enumerate(images.items()):
-                logger.debug(chalk.blue(f"Processing image {filename}"))
+        print(chalk.blue(f"Entry time for {filename}: {entry_time}"))
+        print(chalk.blue("Parsing PDF file"))
+        with tempfile.NamedTemporaryFile(suffix=".pdf") as temp_pdf:
+            temp_pdf.write(file_bytes)
+            temp_path = temp_pdf.name
+            print(chalk.blue(f"Temp path: {temp_path}"))
+            converter = PdfConverter(artifact_dict=models)
+            rendered = converter(temp_path)
+            markdown_text, _, images = text_from_rendered(rendered)
+            metadata = rendered.metadata
+            completion_time = time.time()
 
-                image.save(filename, "PNG")
-                with open(filename, "rb") as f:
-                    image_bytes = f.read()
-                image_base64 = base64.b64encode(image_bytes).decode("utf-8")
-                image_data[f"{filename}"] = image_base64
-                os.remove(filename)
-
-        completion_time = time.time()
-        logger.info(
-            chalk.green(
-                f"Model processes complete time for {filename}: {completion_time}"
+            print(
+                chalk.green(
+                    f"Model processes complete time for {filename}: {completion_time}"
+                )
             )
-        )
-        time_difference = completion_time - entry_time
-        return {
-            "filename": filename,
-            "markdown": markdown_text,
-            "metadata": metadata,
-            "images": image_data,
-            "status": "ok",
-            "time": time_difference,
-        }
+            return {
+                "markdown": markdown_text,
+                "metadata": dict(metadata),
+                "images": dict(images),
+                "status": "ok",
+            }
     except Exception as e:
-        logger.error(chalk.red(f"Error processing PDF {file.filename}: {str(e)}"))
+        print(chalk.red(f"Error processing PDF {file.filename}: {str(e)}"))
         return {
-            "filename": file.filename,
             "markdown": "",
             "metadata": {},
             "images": {},
             "status": "error",
             "error": str(e),
-            "time": 0,
         }

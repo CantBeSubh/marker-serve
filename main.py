@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from marker.logger import configure_logging
-from marker.models import load_all_models
+from marker.models import create_model_dict
 
 from src.api.v1.core import v1_router
 from src.core.config.env import env
@@ -13,17 +13,16 @@ from src.core.logging import Chalk
 configure_logging()
 logger = logging.getLogger(__name__)
 
-model_list = None
+models = None
 chalk = Chalk()
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> None:
-    global model_list
+    global models
     try:
         logger.info(chalk.blue("Loading models..."))
-        model_list = load_all_models()
-        logger.info()
+        models = create_model_dict()
         yield
         logger.info(chalk.yellow("Server shutting down..."))
     except Exception as e:
