@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from marker.logger import configure_logging
 from marker.models import load_all_models
 
+from src.api.v1.core import v1_router
 from src.core.config.env import env
 from src.core.logging import Chalk
 
@@ -48,3 +49,6 @@ async def root():
 @app.get("/health")
 async def health():
     return {"message": "OK"}
+
+
+app.include_router(v1_router)
