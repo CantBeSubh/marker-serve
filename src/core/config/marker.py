@@ -11,7 +11,7 @@ default_config = {
     "retry_wait_time": 10,
     "gemini_model_name": "gemini-2.0-flash",
     "gemini_api_key": env.gemini_api_key,
-    "workers": env.workers,
+    "pdftext_workers": env.workers,
     "extract_images": False,
 }
 
@@ -25,6 +25,7 @@ def create_marker_config_parser(config: dict) -> ConfigParser:
 
 # TODO: The docs on the github repo metions about --workers, but I don't see it in the cli_options.txt
 # https://github.com/datalab-to/marker?tab=readme-ov-file#convert-multiple-files
+# RE: so that is wrong, and one should use --pdftext_workers
 
 # Convert multiple files
 # marker /path/to/input/folder
