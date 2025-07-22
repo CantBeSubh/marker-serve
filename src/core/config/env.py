@@ -25,8 +25,6 @@ class Environment:
     # Define all environment variables as class variables with default values
     # FastAPI Settings
     api_v1_token: str = os.getenv("API_V1_TOKEN", "")
-    port: int = int(os.getenv("PORT", "8080"))
-    debug: bool = os.getenv("DEBUG", "").lower() in ("true", "1", "yes", "y", "t")
     allowed_origins: str = os.getenv("ALLOWED_ORIGINS", "*")
 
     def __new__(cls) -> "Environment":
