@@ -7,6 +7,7 @@ from marker.logger import configure_logging
 from marker.output import text_from_rendered
 from typing_extensions import Annotated
 
+from src.core.config.marker import create_marker_config_parser
 from src.core.logging.chalk import Chalk
 
 configure_logging()
@@ -18,6 +19,7 @@ async def parse_pdf(
     file: UploadFile,
     models: Annotated[any, "A list of models to use for parsing"],
     extract_images: Annotated[bool, "Whether to extract images from the PDF"] = True,
+    config: Annotated[dict, "The config to use for parsing"] = None,
 ) -> dict:
     """
     Parse a PDF file using the provided model list.
@@ -42,11 +44,19 @@ async def parse_pdf(
         file_bytes = await file.read()
         chalk.info(f"Entry time for {filename}")
         chalk.info("Parsing PDF file")
+        # TODO: config passed doesn't work
+        config_parser = create_marker_config_parser(config or {})
         with tempfile.NamedTemporaryFile(suffix=".pdf") as temp_pdf:
             temp_pdf.write(file_bytes)
             temp_path = temp_pdf.name
             chalk.info(f"Temp path: {temp_path}")
-            converter = PdfConverter(artifact_dict=models)
+            converter = PdfConverter(
+                artifact_dict=models,
+                config=config_parser.generate_config_dict(),
+                processor_list=config_parser.get_processors(),
+                renderer=config_parser.get_renderer(),
+                llm_service=config_parser.get_llm_service(),
+            )
             rendered = converter(temp_path)
             markdown_text, _, images = text_from_rendered(rendered)
             metadata = rendered.metadata
@@ -55,7 +65,6 @@ async def parse_pdf(
             return {
                 "markdown": markdown_text,
                 "metadata": dict(metadata),
-                "images": dict(images),
                 "status": "ok",
             }
     except Exception as e:
