@@ -26,14 +26,14 @@ def get_models() -> any:
 
 @router.post("/convert", response_model=ConvertResponse)
 async def convert(
-    pdf_file: UploadFile,
+    file: UploadFile,
     models: Annotated[any, "List of models to use for parsing"] = Depends(get_models),
 ) -> ConvertResponse:
     try:
-        chalk.info(f"Converting PDF: {pdf_file.filename}")
-        result = await parse_pdf(pdf_file, models)
-        chalk.success(f"PDF converted: {pdf_file.filename}")
+        chalk.info(f"Converting PDF: {file.filename}")
+        result = await parse_pdf(file, models)
+        chalk.success(f"PDF converted: {file.filename}")
         return ConvertResponse(**result)
     except Exception as e:
-        chalk.error(f"Error converting PDF {pdf_file.filename}: {str(e)}")
+        chalk.error(f"Error converting PDF {file.filename}: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
