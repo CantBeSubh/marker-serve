@@ -12,6 +12,7 @@ default_config = {
     "gemini_model_name": "gemini-2.0-flash",
     "gemini_api_key": env.gemini_api_key,
     "pdftext_workers": int(env.workers),
+    "max_tasks_per_worker": int(env.workers),
     "extract_images": False,
 }
 
