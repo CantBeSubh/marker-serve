@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from rich.console import Console
 
 
@@ -6,13 +8,17 @@ class Chalk:
         self.console = Console()
 
     def error(self, text: str) -> None:
-        self.console.print(f"ERROR:     {text}", style="red")
+        timestamp = datetime.now().strftime("%H:%M:%S.%f")[:-3]
+        self.console.print(f"[{timestamp}] ERROR:     {text}", style="red")
 
     def success(self, text: str) -> None:
-        self.console.print(f"SUCCESS:     {text}", style="green")
+        timestamp = datetime.now().strftime("%H:%M:%S.%f")[:-3]
+        self.console.print(f"[{timestamp}] SUCCESS:     {text}", style="green")
 
     def warn(self, text: str) -> None:
-        self.console.print(f"WARNING:     {text}", style="yellow")
+        timestamp = datetime.now().strftime("%H:%M:%S.%f")[:-3]
+        self.console.print(f"[{timestamp}] WARNING:     {text}", style="yellow")
 
     def info(self, text: str) -> None:
-        self.console.print(f"INFO:      {text}", style="blue")
+        timestamp = datetime.now().strftime("%H:%M:%S.%f")[:-3]
+        self.console.print(f"[{timestamp}] INFO:      {text}", style="blue")

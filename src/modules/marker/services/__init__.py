@@ -1,6 +1,5 @@
 import logging
 import tempfile
-import time
 
 from fastapi import UploadFile
 from marker.converters.pdf import PdfConverter
@@ -39,10 +38,9 @@ async def parse_pdf(
     - time: The time taken to process the PDF
     """
     try:
-        entry_time = time.time()
         filename = file.filename
         file_bytes = await file.read()
-        chalk.info(f"Entry time for {filename}: {entry_time}")
+        chalk.info(f"Entry time for {filename}")
         chalk.info("Parsing PDF file")
         with tempfile.NamedTemporaryFile(suffix=".pdf") as temp_pdf:
             temp_pdf.write(file_bytes)
@@ -52,11 +50,8 @@ async def parse_pdf(
             rendered = converter(temp_path)
             markdown_text, _, images = text_from_rendered(rendered)
             metadata = rendered.metadata
-            completion_time = time.time()
 
-            chalk.success(
-                f"Model processes complete time for {filename}: {completion_time}"
-            )
+            chalk.success(f"Model processes complete time for {filename}")
             return {
                 "markdown": markdown_text,
                 "metadata": dict(metadata),
