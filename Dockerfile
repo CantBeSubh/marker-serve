@@ -1,6 +1,10 @@
 # source - https://github.com/adithya-s-k/marker-api/blob/master/docker/Dockerfile.cpu.server
 FROM nvidia/cuda:12.9.1-cudnn-devel-ubuntu20.04
 
+# Set non-interactive frontend and configure timezone
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=UTC
+
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     wget \
@@ -21,8 +25,8 @@ RUN apt-get update && \
     git-lfs \
     xvfb \
     && ln -s /usr/bin/python3 /usr/bin/python \
-    && apt-get update \
-    && apt install python3-packaging \    
+    && apt-get update -y \
+    && apt install python3-packaging -y \    
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --upgrade pip
@@ -34,4 +38,5 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 ADD . /app
 WORKDIR /app
 RUN uv sync --locked
-RUN ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "6969", "--reload"]
+RUN uv pip install uvicorn
+CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "6969", "--reload"]
