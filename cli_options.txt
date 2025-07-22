@@ -1,10 +1,13 @@
-### Options
-
-Usage: marker_single [OPTIONS] FPATH
-
-  Convert a single PDF to markdown.
+Usage: marker [OPTIONS] IN_FOLDER
 
 Options:
+  --chunk_idx INTEGER             Chunk index to convert
+  --num_chunks INTEGER            Number of chunks being processed in parallel
+  --max_files INTEGER             Maximum number of pdfs to convert
+  --skip_existing                 Skip existing converted files.
+  --debug_print                   Print debug information.
+  --max_tasks_per_worker INTEGER  Maximum number of tasks per worker process
+                                  before recycling.
   --llm_service TEXT              LLM service to use - should be full import
                                   path, like
                                   marker.services.gemini.GoogleGeminiService
