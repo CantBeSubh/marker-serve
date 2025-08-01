@@ -28,6 +28,7 @@ class Environment:
     allowed_origins: str = os.getenv("ALLOWED_ORIGINS", "*")
     gemini_api_key: str = os.getenv("GEMINI_API_KEY", "")
     workers = os.getenv("NUM_WORKERS", "8")
+    disable_auth = os.getenv("DISABLE_AUTH", "True")
 
     def __new__(cls) -> "Environment":
         if cls._instance is None:
