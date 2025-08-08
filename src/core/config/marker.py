@@ -4,14 +4,21 @@ from .env import env
 
 default_config = {
     "output_format": "markdown",
-    "use_llm": True,
-    "max_concurrency": 15,
+    "use_llm": False,
+    "max_concurrency": 10,
     "timeout": 180,
     "max_retries": 5,
     "retry_wait_time": 10,
     "gemini_model_name": "gemini-2.0-flash",
     "gemini_api_key": env.gemini_api_key,
     "extract_images": False,
+    # "pdftext_workers":7,
+    # "TableProcessor_pdftext_workers": 7,
+    # "DocumentProvider_pdftext_workers": 7,
+    # "PdfProvider_pdftext_workers": 7,
+    # "EpubProvider_pdftext_workers": 7,
+    # "PowerPointProvider_pdftext_workers": 7,
+    # "SpreadSheetProvider_pdftext_workers": 7,
 }
 
 

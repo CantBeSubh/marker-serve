@@ -4,7 +4,7 @@ export
 PORT ?= 6969
 
 dev-run:
-	uv run uvicorn main:app --host localhost --port $(PORT) --reload
+	uv run uvicorn main:app --host localhost --port $(PORT) --reload --workers 4
 
 run:
 	uv run uvicorn main:app --host "0.0.0.0" --port $(PORT)
