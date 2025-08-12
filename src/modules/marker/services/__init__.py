@@ -81,8 +81,8 @@ async def parse_pdf(
 
 def parse_images(images: dict) -> dict:
     """
-    Parse a dictionary of image filenames and base64 encoded images.
-    Returns a dictionary of image filenames and PIL Image objects.
+    Parse a dictionary of image filenames and PIL Image objects.
+    Returns a dictionary of image filenames and base64 encoded images.
     """
     chalk.info(f"Parsing images: {len(images.keys())}")
     parsed_images = {}
