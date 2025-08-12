@@ -11,7 +11,7 @@ default_config = {
     "retry_wait_time": 10,
     "gemini_model_name": "gemini-2.0-flash",
     "gemini_api_key": env.gemini_api_key,
-    "extract_images": False,
+    "extract_images": True,
     # "pdftext_workers":7,
     # "TableProcessor_pdftext_workers": 7,
     # "DocumentProvider_pdftext_workers": 7,

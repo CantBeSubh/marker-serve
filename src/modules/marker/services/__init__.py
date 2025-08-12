@@ -1,5 +1,7 @@
+import base64
 import logging
 import tempfile
+from io import BytesIO
 
 from fastapi import UploadFile
 from marker.converters.pdf import PdfConverter
@@ -18,7 +20,6 @@ chalk = Chalk()
 async def parse_pdf(
     file: UploadFile,
     models: Annotated[any, "A list of models to use for parsing"],
-    extract_images: Annotated[bool, "Whether to extract images from the PDF"] = True,
     config: Annotated[dict, "The config to use for parsing"] = None,
 ) -> dict:
     """
@@ -44,7 +45,6 @@ async def parse_pdf(
         file_bytes = await file.read()
         chalk.info(f"Entry time for {filename}")
         chalk.info("Parsing PDF file")
-        # TODO: config passed doesn't work
         config_parser = create_marker_config_parser(config or {})
         with tempfile.NamedTemporaryFile(suffix=".pdf") as temp_pdf:
             temp_pdf.write(file_bytes)
@@ -65,6 +65,7 @@ async def parse_pdf(
             return {
                 "markdown": markdown_text,
                 "metadata": dict(metadata),
+                "images": images,
                 "status": "ok",
             }
     except Exception as e:
@@ -76,3 +77,25 @@ async def parse_pdf(
             "status": "error",
             "error": str(e),
         }
+
+
+def parse_images(images: dict) -> dict:
+    """
+    Parse a dictionary of image filenames and base64 encoded images.
+    Returns a dictionary of image filenames and PIL Image objects.
+    """
+    chalk.info(f"Parsing images: {len(images.keys())}")
+    parsed_images = {}
+    for key, img in images.items():
+        try:
+            img_file = BytesIO()
+            img.save(img_file, format="JPEG")
+            im_bytes = img_file.getvalue()
+            img_b64 = base64.b64encode(im_bytes)
+            img_b64_string = img_b64.decode("utf-8")
+            parsed_images[key] = img_b64_string
+        except Exception as e:
+            chalk.warn(f"Error processing image {key}: {str(e)}")
+            parsed_images[key] = ""
+    chalk.success(f"Parsed images: {len(images.keys())}")
+    return parsed_images

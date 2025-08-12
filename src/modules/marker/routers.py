@@ -1,12 +1,12 @@
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile,Request
+from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile
 from typing_extensions import Annotated
 
 from src.core.logging.chalk import Chalk
 
 from .schemas import ConvertResponse
-from .services import parse_pdf
+from .services import parse_images, parse_pdf
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +26,7 @@ def get_models() -> any:
 
 @router.post("/convert", response_model=ConvertResponse)
 async def convert(
-    request:Request,
+    request: Request,
     file: UploadFile,
     models: Annotated[any, "List of models to use for parsing"] = Depends(get_models),
 ) -> ConvertResponse:
@@ -38,6 +38,10 @@ async def convert(
         chalk.info(f"Config Params: {config.keys()}")
         chalk.info(f"Config Values: {config}")
         result = await parse_pdf(file, models, config=config)
+        images = {}
+        if "images" in result:
+            images = parse_images(result["images"])
+        result["images"] = images
         chalk.success(f"PDF converted: {file.filename}")
         return ConvertResponse(**result)
     except Exception as e:
