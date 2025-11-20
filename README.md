@@ -6,5 +6,4 @@
 
 ## TODOs
 
--   Fix Docker
 -   Fix config
