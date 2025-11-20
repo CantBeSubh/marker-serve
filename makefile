@@ -15,4 +15,19 @@ tmux:
 tmux-kill:
 	tmux kill-session
 
-.PHONY: dev-run run tmux tmux-kill
+dbuild:
+	@echo "Building..."
+	docker build -t marker-serve .
+
+drun:
+	docker run --rm -p 80:80 --name marker-serve marker-serve
+
+dpush:
+
+	@echo "Getting git commit hash..."
+	$(eval COMMIT_HASH := $(shell git rev-parse --short HEAD))
+	@echo "Building..."
+	docker build -t holyc0w/marker-serve:${COMMIT_HASH} -t holyc0w/marker-serve:latest --platform linux/amd64  .
+	@echo "Pushing..."
+	docker push holyc0w/marker-serve:${COMMIT_HASH}
+	docker push holyc0w/marker-serve:latest
