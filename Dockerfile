@@ -3,9 +3,10 @@ ARG CUDNN_VERSION="8"
 ARG UBUNTU_VERSION="22.04"
 ARG MAX_WORKERS=3
 
-ENV DISABLE_AUTH="True"
 
 FROM nvidia/cuda:$CUDA_VERSION-cudnn$CUDNN_VERSION-devel-ubuntu$UBUNTU_VERSION
+
+ENV DISABLE_AUTH="True"
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
