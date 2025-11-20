@@ -1,11 +1,10 @@
 ARG CUDA_VERSION="11.8.0"
 ARG CUDNN_VERSION="8"
 ARG UBUNTU_VERSION="22.04"
-ARG MAX_WORKERS=3
-
-ENV DISABLE_AUTH="True"
+ARG MAX_WORKERS=1
 
 FROM nvidia/cuda:$CUDA_VERSION-cudnn$CUDNN_VERSION-devel-ubuntu$UBUNTU_VERSION
+
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -39,4 +38,4 @@ ADD . /app
 WORKDIR /app
 RUN uv sync --locked
 RUN uv pip install uvicorn
-CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--workers", MAX_WORKERS]
+CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--workers", MAX_WORKERS, "--port", "6969", "--reload"]
