@@ -12,13 +12,18 @@ default_config = {
     "gemini_model_name": "gemini-2.0-flash",
     "gemini_api_key": env.gemini_api_key,
     "extract_images": True,
-    # "pdftext_workers":7,
-    # "TableProcessor_pdftext_workers": 7,
-    # "DocumentProvider_pdftext_workers": 7,
-    # "PdfProvider_pdftext_workers": 7,
-    # "EpubProvider_pdftext_workers": 7,
-    # "PowerPointProvider_pdftext_workers": 7,
-    # "SpreadSheetProvider_pdftext_workers": 7,
+    # README
+    # hard setting these to 1 reason: hypercorn uses uvloop/trio/asyncio
+    # which will give this error `daemonic processes are not allowed to have children`
+    # FYI: saw a minor loss of in performance - about 20s increase in processing time
+    "workers":1,
+    "pdftext_workers":1,
+    "TableProcessor_pdftext_workers": 1,
+    "DocumentProvider_pdftext_workers": 1,
+    "PdfProvider_pdftext_workers": 1,
+    "EpubProvider_pdftext_workers": 1,
+    "PowerPointProvider_pdftext_workers": 1,
+    "SpreadSheetProvider_pdftext_workers": 1,
 }
 
 
