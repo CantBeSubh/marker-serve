@@ -17,10 +17,10 @@ tmux-kill:
 
 dbuild:
 	@echo "Building..."
-	docker build -t marker-serve .
+	docker build --platform linux/amd64 -t marker-serve .
 
 drun:
-	docker run --rm -p 80:80 --name marker-serve marker-serve
+	docker run --rm -p 80:80 --platform linux/amd64  --name marker-serve marker-serve
 
 dpush:
 
