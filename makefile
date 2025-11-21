@@ -9,6 +9,12 @@ dev-run:
 run:
 	uv run uvicorn main:app --host "0.0.0.0" --port $(PORT) --workers 3
 
+hyper-dev-run:
+	uv run hypercorn --access-log - --error-log - main:app --bind 0.0.0.0:$(PORT)
+
+hyper-run:
+	uv run hypercorn --access-log - --error-log - main:app --bind 0.0.0.0:$(PORT) --workers 3
+
 tmux:
 	tmux new-session -A -s marker-serve
 
@@ -20,7 +26,7 @@ dbuild:
 	docker build --platform linux/amd64 -t marker-serve .
 
 drun:
-	docker run --rm -p 80:80 --platform linux/amd64  --name marker-serve marker-serve
+	docker run --rm -p 80:80 --platform linux/amd64 --name marker-serve marker-serve
 
 dpush:
 
