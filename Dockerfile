@@ -36,4 +36,5 @@ ADD . /app
 WORKDIR /app
 RUN uv sync --locked
 RUN uv pip install uvicorn
-CMD uv run uvicorn main:app --host 0.0.0.0 --port 80 --workers $MAX_WORKERS
+# CMD uv run uvicorn main:app --host 0.0.0.0 --port 80 --workers $MAX_WORKERS
+CMD uv run hypercorn --access-log - --error-log - main:app --bind 0.0.0.0:80 --workers $MAX_WORKERS
