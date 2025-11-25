@@ -36,5 +36,7 @@ ADD . /app
 WORKDIR /app
 RUN uv sync --locked
 RUN uv pip install uvicorn
+RUN uv run python3 -c 'from marker.models import create_model_dict;create_model_dict()'
+
 # CMD uv run uvicorn main:app --host 0.0.0.0 --port 80 --workers $MAX_WORKERS
 CMD uv run hypercorn --access-log - --error-log - main:app --bind 0.0.0.0:80 --workers $MAX_WORKERS
