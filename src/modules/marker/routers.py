@@ -4,9 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, Request, UploadFile
 from typing_extensions import Annotated
 
 from src.core.logging.chalk import Chalk
-
-from .schemas import ConvertResponse
-from .services import parse_images, parse_pdf
+from src.modules.marker.schemas import ConvertResponse
+from src.modules.marker.services import parse_images, parse_pdf
 
 logger = logging.getLogger(__name__)
 
