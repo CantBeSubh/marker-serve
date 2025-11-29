@@ -2,6 +2,7 @@ import logging
 import tempfile
 
 from fastapi import UploadFile
+from datetime import datetime
 from marker.converters.pdf import PdfConverter
 from marker.logger import configure_logging
 from marker.output import text_from_rendered
@@ -90,7 +91,9 @@ async def parse_pdf(
     chalk.info(f"Entry time for {filename}")
     chunks = await map_input(file=file)
     results = []
+    chunk_count = len(chunks)
     for chunk in chunks:
+        time = datetime.now()
         result = await parse_pdf_chunk(
             chunk_bytes=chunk,
             chunk_id=f"{len(results):05}",
@@ -99,5 +102,10 @@ async def parse_pdf(
             config=config,
         )
         results.append(result)
+        delta = datetime.now() - time
+        chunk_parsing_rate = 1 / delta.total_seconds()
+        eta = (chunk_count - len(results)) / chunk_parsing_rate
+        chalk.info(f"Chunk parsing rate: {chunk_parsing_rate} chunks/sec")
+        chalk.info(f"ETA: {eta} seconds")
 
     return await reduce_outputs(results)
