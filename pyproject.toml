@@ -8,6 +8,7 @@ dependencies = [
     "fastapi>=0.116.1",
     "hypercorn>=0.18.0",
     "marker-pdf>=1.8.2",
+    "pypdf2>=3.0.1",
     "python-multipart>=0.0.20",
     "rich>=14.0.0",
     "uvicorn>=0.35.0",
@@ -28,6 +29,7 @@ line-ending = "lf"
 [tool.ruff.lint]
 isort.combine-as-imports = true
 isort.force-wrap-aliases = true
+extend-select = ["I"]
 fixable = ["ALL"]
 unfixable = []
 ignore = ["E203", "E501"]
