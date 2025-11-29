@@ -105,7 +105,9 @@ async def parse_pdf(
         delta = datetime.now() - time
         chunk_parsing_rate = 1 / delta.total_seconds()
         eta = (chunk_count - len(results)) / chunk_parsing_rate
-        chalk.info(f"Chunk parsing rate: {chunk_parsing_rate} chunks/sec")
-        chalk.info(f"ETA: {eta} seconds")
+        chalk.info(
+            f"Chunk parsing rate for {filename}: {chunk_parsing_rate} chunks/sec"
+        )
+        chalk.info(f"ETA for {filename}: {eta} seconds")
 
     return await reduce_outputs(results)
