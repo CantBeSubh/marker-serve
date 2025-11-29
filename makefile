@@ -10,7 +10,7 @@ run:
 	uv run uvicorn main:app --host "0.0.0.0" --port $(PORT) --workers 3
 
 hyper-dev-run:
-	uv run hypercorn --access-log - --error-log - main:app --bind 0.0.0.0:$(PORT)
+	uv run hypercorn --access-log - --error-log - main:app --bind 0.0.0.0:$(PORT) --reload
 
 hyper-run:
 	uv run hypercorn --access-log - --error-log - main:app --bind 0.0.0.0:$(PORT) --workers 3
