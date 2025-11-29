@@ -1,8 +1,8 @@
 import logging
 import tempfile
+from datetime import datetime
 
 from fastapi import UploadFile
-from datetime import datetime
 from marker.converters.pdf import PdfConverter
 from marker.logger import configure_logging
 from marker.output import text_from_rendered
