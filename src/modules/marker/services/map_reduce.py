@@ -53,6 +53,8 @@ async def slide_output(output: dict) -> dict:
     chunk_id = int(output["chunk_id"])
     chalk.info(f"Adjusting chunk_id={chunk_id}")
 
+    md = ""
+    metadata = {}
     if output["metadata"]:
         metadata = output["metadata"]
         if metadata["table_of_contents"]:
@@ -92,9 +94,9 @@ async def slide_output(output: dict) -> dict:
             md = md.replace(old_str, new_str, 1)
 
     return {
-        "combined_markdown": md or "",
+        "combined_markdown": md,
         "images": images,
-        "metadata": metadata or {},
+        "metadata": metadata,
     }
 
 
