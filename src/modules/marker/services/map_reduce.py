@@ -92,9 +92,9 @@ async def slide_output(output: dict) -> dict:
             md = md.replace(old_str, new_str, 1)
 
     return {
-        "combined_markdown": md,
+        "combined_markdown": md or "",
         "images": images,
-        "metadata": metadata,
+        "metadata": metadata or {},
     }
 
 
