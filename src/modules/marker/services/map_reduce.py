@@ -30,6 +30,9 @@ async def map_input(file: UploadFile) -> list[bytes]:
 
             for page_num in range(num_pages):
                 page = reader.pages[page_num]
+                if not page.extract_text():
+                    chalk.warn(f"Page {page_num} for{file.filename} is empty")
+                    continue
                 writer_stream = BytesIO()
                 writer = PdfWriter()
                 writer.add_page(page)
